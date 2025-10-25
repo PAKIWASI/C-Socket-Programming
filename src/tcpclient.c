@@ -1,4 +1,5 @@
 #include "socket_includes.h"
+#include <sys/types.h>
 
 
 int main(int argc, char* argv[])
@@ -61,8 +62,11 @@ int main(int argc, char* argv[])
 
 
         // send the msg
-        if ( send(sockfd, sendmsg, len, 0) < 0) {
-            err_n_die("send error");
+        ssize_t total_sent = 0;
+        while (total_sent < (ssize_t)len) {
+            ssize_t sent = send(sockfd, sendmsg + total_sent, len - total_sent, 0);
+            if (sent < 0) { err_n_die("send error"); }
+            total_sent += sent;
         }
 
         // receive the response

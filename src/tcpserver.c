@@ -88,10 +88,17 @@ int main(void)
 
             // prepare response
             snprintf((char*)sendmsg, sizeof(sendmsg), "Message recieved (%zu bytes)", n);
+            ssize_t msg_len = strlen((char*)sendmsg);
 
-            if ( send(connfd, sendmsg, strlen((char*)sendmsg), 0) < 0) {
-                perror("send error");
-                break;
+            // send response (handle partial writes)
+            ssize_t total_sent = 0;
+            while (total_sent < msg_len) {
+                ssize_t sent = send(connfd, sendmsg + total_sent, msg_len - total_sent, 0);
+                if (sent < 0) { 
+                    perror("send error"); 
+                    break; 
+                }
+                total_sent += sent;
             }
 
 
