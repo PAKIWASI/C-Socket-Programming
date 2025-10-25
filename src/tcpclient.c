@@ -4,8 +4,8 @@
 int main(int argc, char* argv[])
 {
     int sockfd;   // socket file discriptor
-    ssize_t n;  // 
-    size_t sendbytes; // strlen(sendmsg) 
+    ssize_t n;   
+    
     // all info needed to identify a network endpoint(ip address, port number)
     struct sockaddr_in servaddr;  // stores addressing info for internal sockets
     char sendmsg[BUFFER_SIZE];
@@ -82,3 +82,4 @@ int main(int argc, char* argv[])
     close(sockfd);
     return 0;
 }
+

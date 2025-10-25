@@ -28,36 +28,25 @@ void err_n_die(const char* fmt, ...) {
     exit(1);
 }
 
-// something wrong with this?
-char* bin2hex(const unsigned char* input, size_t len) // debugging (binary to hex)
-{
-
+char* bin2hex(const unsigned char* input, size_t len) {
     if (input == NULL || len <= 0) { return NULL; }
-
-    char* result;
-    char* hexits = "0123456789ABCDEF";
-
-    // (2 hexits + space) / char + NULL
-    size_t resultlen = (len * 3) + 1;
-
-    result = malloc(resultlen);
-    if (!result) {
-        err_n_die("bin2hex malloc failed");
-    }
-
-    memset(result, 0, resultlen);
-
+    
+    const char* hexits = "0123456789ABCDEF";
+    char* result = malloc((len * 3) + 1);
+    if (!result) { return NULL; }
+    
     for (size_t i = 0; i < len; i++) {
-        result[i * 3] = hexits[input[i]] >> 4;
-        result[(i * 3) + 1] = hexits[input[i]] & 0x0F;
-        result[(i * 3) + 2] = ' '; 
+        result[i * 3] = hexits[input[i] >> 4];
+        result[(i * 3) + 1] = hexits[input[i] & 0x0F];
+        result[(i * 3) + 2] = ' ';
     }
-
-   // Null-terminate (overwrite the last space)
+    
     if (len > 0) {
         result[(len * 3) - 1] = '\0';
+    } else {
+        result[0] = '\0';
     }
-
+    
     return result;
 }
 

@@ -1,4 +1,5 @@
 #include "socket_includes.h"
+#include <stdlib.h>
 
 
 int main(void)
@@ -41,7 +42,7 @@ int main(void)
     printf("Server listening on port %d\n", SERVER_PORT);
 
     while (1) {
-        struct sockaddr_in addr; // stores info about client
+        struct sockaddr_in addr; // stores info about client (each client gets a socket)
         socklen_t addr_len = sizeof(addr);
 
         // accespt blocks until n incoming connection arrives
@@ -81,6 +82,9 @@ int main(void)
 
             // print the recienved msg
             printf("Client says: %s\n", recvmsg);
+            char* hex = bin2hex(recvmsg, n);
+            printf("Hex dump: %s\n", hex);
+            free(hex);
 
             // prepare response
             snprintf((char*)sendmsg, sizeof(sendmsg), "Message recieved (%zu bytes)", n);
@@ -89,6 +93,8 @@ int main(void)
                 perror("send error");
                 break;
             }
+
+
         }
 
         // close temp connection with client
