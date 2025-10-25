@@ -1,0 +1,11 @@
+CompileFlags:
+  CompilationDatabase: build/
+  Add:
+    - "-std=c99"
+
+Diagnostics:
+  ClangTidy:
+    Remove:
+      - cert-err33-c
+
+ 
