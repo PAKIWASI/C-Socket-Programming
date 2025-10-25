@@ -8,6 +8,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(client src/tcpclient.c)
 add_executable(server src/tcpserver.c)
+add_executable(chatserver src/chatserver.c)
 
 target_include_directories(client PRIVATE ${CMAKE_SOURCE_DIR}/include)
 target_include_directories(server PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(chatserver PRIVATE ${CMAKE_SOURCE_DIR}/include)

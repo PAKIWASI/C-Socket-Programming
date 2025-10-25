@@ -7,5 +7,6 @@ Diagnostics:
   ClangTidy:
     Remove:
       - cert-err33-c
+      - android-cloexec-accept
 
  

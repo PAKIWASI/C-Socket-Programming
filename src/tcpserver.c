@@ -1,11 +1,12 @@
 #include "socket_includes.h"
 #include <stdlib.h>
+#include <sys/types.h>
 
 
 int main(void)
 {
-    int listenfd;
-    int connfd;
+    int listenfd; // main server socket (file discriptor) that listens to incomming connections 
+    int connfd;   //  per-client socket for actual communication                                
     size_t n;
     struct sockaddr_in servaddr;
     u8 sendmsg[BUFFER_SIZE + 1];
@@ -24,7 +25,7 @@ int main(void)
     setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
 
     memset(&servaddr, 0, sizeof(servaddr));
-    servaddr.sin_family = AF_INET;
+    servaddr.sin_family = AF_INET;                          // ipv4
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY); // server responds to anything
     servaddr.sin_port = htons(SERVER_PORT); // port to listen to
 
@@ -88,11 +89,11 @@ int main(void)
 
             // prepare response
             snprintf((char*)sendmsg, sizeof(sendmsg), "Message recieved (%zu bytes)", n);
-            ssize_t msg_len = strlen((char*)sendmsg);
+            size_t msg_len = strlen((char*)sendmsg);
 
             // send response (handle partial writes)
             ssize_t total_sent = 0;
-            while (total_sent < msg_len) {
+            while (total_sent < (ssize_t)msg_len) {
                 ssize_t sent = send(connfd, sendmsg + total_sent, msg_len - total_sent, 0);
                 if (sent < 0) { 
                     perror("send error"); 
@@ -100,8 +101,6 @@ int main(void)
                 }
                 total_sent += sent;
             }
-
-
         }
 
         // close temp connection with client
