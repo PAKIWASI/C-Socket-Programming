@@ -8,6 +8,7 @@
 #define MAX_CLIENTS 100
 #define USERNAME_MAX 20
 
+
 typedef struct {
     int sockfd;
     char username[USERNAME_MAX + 1];
@@ -15,7 +16,6 @@ typedef struct {
 } __attribute__((aligned(32))) Client;
 
 Client clients[MAX_CLIENTS];
-int next_client_id = 1;
 
 
 void init_clients(void) {
@@ -242,15 +242,15 @@ int main(void)
             }
 
             // ADD CLIENT TO MANAGEMENT SYSTEM
-            int client_index = add_client(connfd);
+            int client_index = add_client(connfd); // connfd points to the socket of the client
             if (client_index == -1) { 
                 const char* msg = "Server full. Try again later.\n";
                 send(connfd, msg, strlen(msg), 0);
                 close(connfd);
                 printf("Connection refused: server full\n");
             } else {
-                FD_SET(connfd, &master_fds); // Add client socket to select() monitoring                
-                if (connfd > maxfd) {       // Update maxfd if this is new highest
+                FD_SET(connfd, &master_fds); // Add client socket to select() monitoring
+                if (connfd > maxfd) {        // Update maxfd if this is new highest
                     maxfd = connfd;
                 }
                 
