@@ -9,16 +9,17 @@
 #define USERNAME_MAX 20
 
 
-typedef struct {
+typedef struct {        // Client Info
     int sockfd;
     char username[USERNAME_MAX + 1];
     int active;
-} __attribute__((aligned(32))) Client;
-
-Client clients[MAX_CLIENTS];
+} Client;
 
 
-void init_clients(void) {
+Client clients[MAX_CLIENTS];        // array of clients
+
+
+void init_clients(void) {                       
     for (int i = 0; i < MAX_CLIENTS; i++) {
         clients[i].sockfd = -1;
         clients[i].username[0] = '\0';
@@ -26,11 +27,11 @@ void init_clients(void) {
     }
 }
 
-int add_client(int sockfd) {
+int add_client(int sockfd) {                // add a client (add their file descriptor)
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (!clients[i].active) {
             clients[i].sockfd = sockfd;
-            clients[i].active = 1;
+            clients[i].active = 1;                              // username is User + fd
             snprintf(clients[i].username, USERNAME_MAX + 1, "User%d", clients[i].sockfd);
             return i;
         }
