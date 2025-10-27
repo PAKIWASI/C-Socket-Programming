@@ -13,7 +13,7 @@ typedef struct {        // Client Info
     int sockfd;
     char username[USERNAME_MAX + 1];
     int active;
-} Client;
+} __attribute__((aligned(32))) Client;
 
 
 Client clients[MAX_CLIENTS];        // array of clients
@@ -115,6 +115,7 @@ void handle_command(int client_index, char* msg)
         snprintf(buffer, sizeof(buffer), "*** %s is now known as %s ***\n", 
                 clients[client_index].username, new_name);
         broadcast_message(buffer, -1);
+        printf("%s", buffer);       // log to server
         
         strncpy(clients[client_index].username, new_name, USERNAME_MAX);
         clients[client_index].username[USERNAME_MAX] = '\0';
